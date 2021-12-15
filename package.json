@@ -24,9 +24,7 @@
     "passport-local": "^1.0.0",
     "ts-node": "^10.4.0",
     "typescript": "^4.5.3",
-    "uuid": "^8.3.2"
-  },
-  "devDependencies": {
+    "uuid": "^8.3.2",
     "@types/bcrypt": "^5.0.0",
     "@types/compression": "^1.7.2",
     "@types/cookie-parser": "^1.4.2",
@@ -36,6 +34,8 @@
     "@types/passport": "^1.0.7",
     "@types/passport-local": "^1.0.34",
     "@types/uuid": "^8.3.3"
+  },
+  "devDependencies": {
   },
   "description": "",
   "optionalDependencies": {
