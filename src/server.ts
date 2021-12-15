@@ -26,6 +26,15 @@ const PORT = process.env.PORT !== undefined && !isNaN(parseInt(process.env.PORT)
 
 
 // -------------------- MIDDLEWARE --------------------
+sv.use(function (req, res, next) {
+  res.header('Access-Control-Allow-Credentials', "true");
+  res.header('Access-Control-Allow-Origin', req.headers.origin);
+  res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
+  res.header('Access-Control-Allow-Headers', 'X-Requested-With, X-HTTP-Method-Override, Content-Type, Accept');
+  next();
+});
+
+
 sv.use(express.json())
 sv.use(express.urlencoded({ extended: true }))
 sv.use(cors({
