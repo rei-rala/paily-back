@@ -4,7 +4,7 @@
   "main": "./dist/server.js",
   "scripts": {
     "start": "node .\\dist\\server.js",
-    "build": "tsc",
+    "build": "npm install && tsc",
     "test": "tsc && node .",
     "postinstall": "npm run build"
   },
