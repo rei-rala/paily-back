@@ -1,9 +1,9 @@
 {
   "name": "server",
   "version": "1.0.0",
-  "main": "./dist/server.js",
+  "main": ".\\dist\\server.js",
   "scripts": {
-    "start": "ts-node .\\src\\server.ts",
+    "start": "tsc && node .",
     "dev": "ts-node .\\src\\server.ts",
     "test": "tsc && node ."
   },
