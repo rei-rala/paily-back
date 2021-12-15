@@ -3,10 +3,10 @@
   "version": "1.0.0",
   "main": "./dist/server.js",
   "scripts": {
-    "start": "node .\\dist\\server.js",
-    "build": "npm install && tsc",
-    "test": "tsc && node .",
-    "postinstall": "npm run build"
+    "start": "ts-node .\\src\\server.ts",
+    "dev": "ts-node .\\src\\server.ts",
+    "test": "tsc && node ."
+
   },
   "keywords": [],
   "author": "rei-rala",
@@ -24,6 +24,7 @@
     "mongoose": "^6.1.1",
     "passport": "^0.5.0",
     "passport-local": "^1.0.0",
+    "ts-node": "^10.4.0",
     "uuid": "^8.3.2"
   },
   "devDependencies": {
