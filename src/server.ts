@@ -29,7 +29,7 @@ const PORT = process.env.PORT !== undefined && !isNaN(parseInt(process.env.PORT)
 sv.use(express.json())
 sv.use(express.urlencoded({ extended: true }))
 sv.use(cors({
-  origin: '*', //['http://192.168.56.1:3000', 'http://localhost:3000', 'http://localhost:8080'],
+  origin: 'https://pai-ly.vercel.app/', //['http://192.168.56.1:3000', 'http://localhost:3000', 'http://localhost:8080'],
   credentials: true,
 }))
 sv.use(cookieParser(process.env.SECRET))
@@ -82,7 +82,8 @@ sv.post('/api/user/logout', logUserOut)
 // TRACKING MIDDLEWARE
 sv.use(track)
 
-// Serve static assets if in production
+/*
+// Serve static assets if in production (React)
 if (process.env.NODE_ENV === 'production') {
   // Set static folder
   sv.use(express.static('client/build'));
@@ -91,6 +92,7 @@ if (process.env.NODE_ENV === 'production') {
     res.sendFile(path.resolve(__dirname, 'client', 'build', 'index.html'));
   });
 }
+*/
 
 sv.use(errorMiddleware)
 //sv.use(notFoundMiddleware)
