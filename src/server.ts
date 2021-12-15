@@ -29,7 +29,7 @@ const PORT = process.env.PORT !== undefined && !isNaN(parseInt(process.env.PORT)
 sv.use(express.json())
 sv.use(express.urlencoded({ extended: true }))
 sv.use(cors({
-  origin: ['http://192.168.0.46:3000', 'http://localhost:3000', 'http://localhost:8080'],
+  origin: ['http://192.168.56.1:3000', 'http://localhost:3000', 'http://localhost:8080'],
   credentials: true,
 }))
 sv.use(cookieParser(process.env.SECRET))
