@@ -58,7 +58,7 @@ passport_config(passport)
 connectDBResources()
   .then(() => sv.listen(
     PORT,
-    '0.0.0.0',
+    //  '0.0.0.0',
     () => console.log(`Server levantado en puerto ${PORT}`))
   )
   .catch((error) => {
