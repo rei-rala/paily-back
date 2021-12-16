@@ -27,6 +27,8 @@ const CriptosSchema = new Schema({
   buy: { type: Number, required: true, maxlength: 10 },
   sell: { type: Number, required: true, maxlength: 10 },
   timestamp: { type: Number }
+}, {
+  versionKey: false
 })
 
 export const CriptoDB = model(criptosCollection, CriptosSchema)

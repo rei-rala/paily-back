@@ -13,7 +13,7 @@ import { mongooseSessionsURI, connectDBResources } from './libs/models/Mongoose'
 
 import { logUserOut } from './libs/controllers/users.controllers'
 
-import { authMiddleware } from './libs/middleware/authMiddleware'
+import { authMiddleware, postAuthentication } from './libs/middleware/authMiddleware'
 import { track } from './libs/controllers/track.controllers'
 import { errorMiddleware,/*  notFoundMiddleware */ } from './libs/middleware/errorMiddleware'
 
@@ -21,6 +21,7 @@ import passport_config from './libs/middleware/passport'
 import headersAttachMiddleware from './libs/middleware/headersAttachMiddleware'
 
 import { fetchCoinPrices } from './fetchRoutine/getCoins'
+import { criptoPrices } from './libs/controllers/criptos.controller'
 
 const sv = express()
 
@@ -82,13 +83,15 @@ connectDBResources()
 //sv.post('*', (req, res, next) => { console.log(`${req.method} ${req.originalUrl}`); console.table(req.body); console.log('-INICIO-'); next() })
 
 // -------------------- ROUTES --------------------
-sv.get('/api/user/', authMiddleware)
-sv.post('/api/user/register', passport.authenticate('-register'), authMiddleware)
-sv.post('/api/user/login', passport.authenticate('-login'), authMiddleware)
+sv.post('/api/user/register', passport.authenticate('-register'), postAuthentication)
+sv.post('/api/user/login', passport.authenticate('-login'), postAuthentication)
 sv.post('/api/user/logout', logUserOut)
 
 // TRACKING MIDDLEWARE
 sv.use(track)
+
+sv.use(authMiddleware)
+sv.get('/api/cripto/latestprices', criptoPrices)
 
 /*
 // Serve static assets if in production (React)
@@ -105,5 +108,7 @@ if (process.env.NODE_ENV === 'production') {
 sv.use(errorMiddleware)
 //sv.use(notFoundMiddleware)
 
-fetchCoinPrices()
-  .then(() => setInterval(fetchCoinPrices, 5000))
+if (process.env.NODE_ENV === 'production') {
+  fetchCoinPrices()
+    .then(() => setInterval(fetchCoinPrices, 5000))
+}

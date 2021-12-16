@@ -9,6 +9,14 @@ interface IAuthUser extends Express.User {
 
 export function authMiddleware(req: Request, res: Response, next: NextFunction) {
   if (req.isAuthenticated()) {
+    next()
+  } else {
+    next({ status: 401, message: 'Usuario no logueado' });
+  }
+}
+
+export function postAuthentication(req: Request, res: Response, next: NextFunction) {
+  if (req.isAuthenticated()) {
     let user: IAuthUser = req.user;
 
     delete user.password
@@ -17,6 +25,6 @@ export function authMiddleware(req: Request, res: Response, next: NextFunction) 
 
     res.status(200).json(req.user);
   } else {
-    next({ message: 'Usuario no logueado' });
+    next({ status: 401, message: 'Usuario no logueado' });
   }
 }

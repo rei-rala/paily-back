@@ -23,6 +23,8 @@ const UsersSchema = new Schema({
       balance: { type: Number },
     }]
   }
+}, {
+  versionKey: false
 })
 
 export const UserDB = model(usersCollection, UsersSchema)

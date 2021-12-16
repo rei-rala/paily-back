@@ -25,6 +25,14 @@ class MongoDatabase {
     return this.model.findOne(filter, fields).lean().exec()
   }
 
+  findTopN = async (filter = {}, fields?: string, limit?: number) => {
+    return this.model.find(filter, fields).limit(limit ?? 10).lean().exec()
+  }
+
+  findLatest = async (fields?: string) => {
+    return this.model.find({}, fields ?? {}).sort({ "_id": -1 }).limit(1).lean().exec()
+  }
+
   save = async (object: IUser | ICripto | ICriptoPrice) => {
     const newObject = new this.model(object)
 

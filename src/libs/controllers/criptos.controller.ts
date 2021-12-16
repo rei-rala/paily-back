@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express"
-import { CriptosDB } from "../models/Mongoose"
+import { CriptosDB, CriptoPricesDB } from "../models/Mongoose"
 
 
 export const getCriptoDB = (req: Request, res: Response, next: NextFunction) => {
@@ -34,4 +34,13 @@ export const createNewCripto = (req: Request, res: Response, next: NextFunction)
       message
     })
   }
+}
+
+
+export const criptoPrices = async (req: Request, res: Response, next: NextFunction) => {
+  //const query = req.query
+
+  CriptoPricesDB.findLatest()
+    .then(latest => res.status(200).send(latest))
+    .catch(message => next({ status: 500, message }))
 }
