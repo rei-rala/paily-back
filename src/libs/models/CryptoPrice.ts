@@ -11,7 +11,7 @@ const criptoPriceCollection = 'criptoPrices'
 
 const CriptosPriceSchema = new Schema({
   timestamp: { type: Number, required: true },
-  details: Mixed
+  details: { type: Mixed, required: true }
 }, {
   versionKey: false
 })

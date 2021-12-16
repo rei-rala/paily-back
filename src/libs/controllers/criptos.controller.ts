@@ -38,9 +38,21 @@ export const createNewCripto = (req: Request, res: Response, next: NextFunction)
 
 
 export const criptoPrices = async (req: Request, res: Response, next: NextFunction) => {
-  //const query = req.query
+  const token = req.query.token ?? ''
 
   CriptoPricesDB.findLatest()
-    .then(latest => res.status(200).send(latest))
+    .then((latest: any) => {
+      if (token && token !== '') {
+
+        const found = latest[0].details.filter((x: any) => x.token === token)
+
+        found
+          ? res.status(200).send(found)
+          : next({ status: 404, message: 'No encontramos el token', token })
+
+      } else {
+        res.status(200).send(latest)
+      }
+    })
     .catch(message => next({ status: 500, message }))
 }
