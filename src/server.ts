@@ -29,8 +29,6 @@ const PORT = process.env.PORT !== undefined && !isNaN(parseInt(process.env.PORT)
 const { authMiddleware, postAuthentication, errorMiddleware, notFoundMiddleware, passport_config, headersAttachMiddleware } = middleWares
 
 
-sv.use(headersAttachMiddleware);
-
 sv.use(express.json())
 sv.use(express.urlencoded({ extended: true }))
 sv.use(cors({
@@ -41,6 +39,7 @@ sv.use(cookieParser(
   process.env.SECRET
 ))
 
+sv.use(headersAttachMiddleware);
 
 sv.use(session({
   store: MongoStore.create({
