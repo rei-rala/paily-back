@@ -2,11 +2,12 @@ import { Schema, model } from 'mongoose'
 import { IBalance } from './Cryptos'
 
 export interface IUser {
+  _id?: any,
   id: string,
-  email: string,
-  password: string,
-  image: string,
-  balances: IBalance[]
+  email?: string,
+  password?: string,
+  image?: string,
+  balances?: IBalance[]
 }
 
 const usersCollection = 'users'

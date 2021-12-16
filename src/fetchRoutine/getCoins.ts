@@ -69,7 +69,8 @@ const ourCriptoData = [
 const coingeckoBaseUrl = "https://coingecko.p.rapidapi.com"
 
 export const fetchCoinPrices = async () => {
-  axios.get(`${coingeckoBaseUrl}/simple/price?vs_currencies=usd&ids=${OURCRIPTOS.join()}`, {
+  axios.get(
+    `${coingeckoBaseUrl}/simple/price?vs_currencies=usd&ids=${OURCRIPTOS.join()}&include_24hr_change=true&include_last_updated_at=true`, {
     headers: {
       'x-rapidapi-host': 'coingecko.p.rapidapi.com',
       'x-rapidapi-key': process.env.RAPIDAPI_KEY || ''
@@ -80,12 +81,16 @@ export const fetchCoinPrices = async () => {
         name: ourCriptoData.find((cd: any) => cd.id === id)?.name ?? '',
         token: ourCriptoData.find((cd: any) => cd.id === id)?.token ?? '',
         buy: +data[id].usd.toFixed(2) || -1,
+        change24h: data[id].usd_24h_change,
+        lastUpdated: data[id].last_updated_at
       }))
     })
-    .then(arrayReadyData => CriptoPricesDB.save({
-      timestamp: moment().valueOf(),
-      details: arrayReadyData
-    }))
-    .then(resp => console.log('Guardado'))
+    .then(arrayReadyData => {
+      CriptoPricesDB.save({
+        timestamp: moment().valueOf(),
+        details: arrayReadyData
+      })
+    })
+    .then(resp => console.log('Nueva lista de precio'))
     .catch(err => console.log('Error al salvar lista de precios', err))
 }

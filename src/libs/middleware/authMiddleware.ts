@@ -8,6 +8,7 @@ interface IAuthUser extends Express.User {
 }
 
 export function authMiddleware(req: Request, res: Response, next: NextFunction) {
+  console.log(req.user)
   if (req.isAuthenticated()) {
     next()
   } else {

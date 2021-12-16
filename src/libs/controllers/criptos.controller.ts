@@ -41,16 +41,19 @@ export const criptoPrices = async (req: Request, res: Response, next: NextFuncti
   const token = req.query.token ?? ''
 
   CriptoPricesDB.findLatest()
-    .then((latest: any) => {
+    .then(([latest]: any) => {
+      delete latest._id; delete latest.__v
+
       if (token && token !== '') {
 
-        const found = latest[0].details.filter((x: any) => x.token === token)
-
+        const found = latest.details.find((x: any) => x.token === token)
+        console.log(found)
         found
           ? res.status(200).send(found)
           : next({ status: 404, message: 'No encontramos el token', token })
 
       } else {
+        console.log(latest)
         res.status(200).send(latest)
       }
     })

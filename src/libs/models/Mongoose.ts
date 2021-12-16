@@ -43,15 +43,15 @@ class MongoDatabase {
     return this.model.insertMany(arrayOfObjects)
   }
 
-  updateById = async (_id: string, properties: any) => {
+  updateById = async (_id: any, properties: any) => {
 
     if (!_id) { throw 'Ingrese un ID' }
     if (!properties) { throw 'Ingrese propiedad/es para actualizar' }
 
-    return this.model.findByIdAndUpdate({ _id }, { ...properties }).exec()
+    return this.model.findByIdAndUpdate({ _id }, { ...properties }, { new: true }).exec()
   }
 
-  deleteById = async (_id: string) => {
+  deleteById = async (_id: any) => {
     return this.model.findOneAndDelete({ _id }).exec()
   }
 }

@@ -3,7 +3,7 @@ import { Strategy as LocalStrategy } from 'passport-local'
 
 import { UsersDB } from '../models/Mongoose'
 import REGEX from '../../utils/regex'
-import { hashPassword, compareVsEncrypted } from '../../utils/encryption'
+import { hashString, compareVsEncrypted } from '../../utils/encryption'
 import { v4 } from 'uuid'
 
 export const passport_init = (pssp: PassportStatic) => {
@@ -24,7 +24,7 @@ export const passport_init = (pssp: PassportStatic) => {
             } else if (REGEX.emailStronger.test(username) === false || REGEX.password.test(password) === false) {
               return done(null, false, { message: 'Compruebe los datos ingresados' })
             } else {
-              await hashPassword(password)
+              await hashString(password)
                 .then(hashedPassword => UsersDB.save({
                   id: v4(),
                   email: username,

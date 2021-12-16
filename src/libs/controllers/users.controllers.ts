@@ -1,6 +1,14 @@
 import { Request, Response, NextFunction } from "express"
+
 import { UsersDB } from "../models/Mongoose"
 import { IUser } from "../models/Users"
+//import REGEX from "../../utils/regex"
+
+declare global {
+  namespace Express {
+    interface User extends IUser { }
+  }
+}
 
 const testAdmin = {
   username: 'a',
@@ -41,4 +49,25 @@ export const getUsersDB = (req: Request, res: Response, next: NextFunction) => {
   catch (message) {
     next({ status: 400, message })
   }
+}
+
+
+export const updateUserImage = async (req: Request, res: Response, next: NextFunction) => {
+  const _id = req.user?._id.toString()
+  const newImage = req.body.newImage
+
+  console.log(req.body)
+  console.log('assadsa')
+  _id === undefined || newImage === undefined
+    ? next({ status: 400, message: 'No se recibieron suficientes parametros' })
+    /*
+         : !REGEX.urlFile.test(newImage)
+          ? next({ status: 400, message: 'La URL ingresada no es valida' }) */
+    : UsersDB.updateById(_id, { image: newImage })
+      .then(updated => {
+        updated
+          ? res.status(202).send(updated)
+          : next({ status: 409, message: `Error no identificado en actualizacion de datos` })
+      })
+      .catch(message => next({ message }))
 }

@@ -11,14 +11,14 @@ import passport from 'passport'
 
 import { mongooseSessionsURI, connectDBResources } from './libs/models/Mongoose'
 
-import { logUserOut } from './libs/controllers/users.controllers'
+import { logUserOut, updateUserImage } from './libs/controllers/users.controllers'
 
 import { authMiddleware, postAuthentication } from './libs/middleware/authMiddleware'
 import { track } from './libs/controllers/track.controllers'
-import { errorMiddleware,/*  notFoundMiddleware */ } from './libs/middleware/errorMiddleware'
+import { errorMiddleware, notFoundMiddleware,/*  notFoundMiddleware */ } from './libs/middleware/errorMiddleware'
 
 import passport_config from './libs/middleware/passport'
-import headersAttachMiddleware from './libs/middleware/headersAttachMiddleware'
+//import headersAttachMiddleware from './libs/middleware/headersAttachMiddleware'
 
 import { fetchCoinPrices } from './fetchRoutine/getCoins'
 import { criptoPrices } from './libs/controllers/criptos.controller'
@@ -30,8 +30,7 @@ const PORT = process.env.PORT !== undefined && !isNaN(parseInt(process.env.PORT)
 
 
 // -------------------- MIDDLEWARE --------------------
-sv.use(headersAttachMiddleware);
-
+//sv.use(headersAttachMiddleware);
 
 sv.use(express.json())
 sv.use(express.urlencoded({ extended: true }))
@@ -85,13 +84,13 @@ connectDBResources()
 sv.get('/', (_, res) => res.redirect('https://pai-ly.vercel.app'))
 sv.post('/api/user/register', passport.authenticate('-register'), postAuthentication)
 sv.post('/api/user/login', passport.authenticate('-login'), postAuthentication)
+sv.use(authMiddleware)
 sv.post('/api/user/logout', logUserOut)
-
 // TRACKING MIDDLEWARE
 sv.use(track)
 
-// TEMP DISABLED
-//sv.use(authMiddleware)
+sv.get('/api/user', postAuthentication)
+sv.post('/api/user', updateUserImage)
 sv.get('/api/cripto/latestprices', criptoPrices)
 
 /*
@@ -107,9 +106,17 @@ if (process.env.NODE_ENV === 'production') {
 */
 
 sv.use(errorMiddleware)
-//sv.use(notFoundMiddleware)
+sv.get('*', notFoundMiddleware)
 
 if (process.env.NODE_ENV === 'production') {
+
+  console.log('Iniciando obtencion de precios')
+  const fetchingInterval = setInterval(fetchCoinPrices, 5000)
   fetchCoinPrices()
-    .then(() => setInterval(fetchCoinPrices, 5000))
+    .catch(error => {
+      clearInterval(fetchingInterval)
+      console.log('Error al obtener precios')
+      console.error(error.message)
+      process.exit(1)
+    })
 }
