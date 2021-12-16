@@ -40,7 +40,8 @@ sv.use(cors({
   credentials: true,
 }))
 sv.use(cookieParser(
-  process.env.SECRET))
+  process.env.SECRET
+))
 
 
 sv.use(session({
@@ -77,12 +78,11 @@ connectDBResources()
   })
 
 
-
-
 // -------------------- TEST ROUTE --------------------
 //sv.post('*', (req, res, next) => { console.log(`${req.method} ${req.originalUrl}`); console.table(req.body); console.log('-INICIO-'); next() })
 
 // -------------------- ROUTES --------------------
+sv.get('/', (_, res) => res.redirect('https://pai-ly.vercel.app'))
 sv.post('/api/user/register', passport.authenticate('-register'), postAuthentication)
 sv.post('/api/user/login', passport.authenticate('-login'), postAuthentication)
 sv.post('/api/user/logout', logUserOut)
@@ -90,7 +90,8 @@ sv.post('/api/user/logout', logUserOut)
 // TRACKING MIDDLEWARE
 sv.use(track)
 
-sv.use(authMiddleware)
+// TEMP DISABLED
+//sv.use(authMiddleware)
 sv.get('/api/cripto/latestprices', criptoPrices)
 
 /*
