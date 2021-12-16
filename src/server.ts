@@ -1,7 +1,7 @@
 import express from 'express'
 import session from 'express-session'
 
-import path from 'path'
+//import path from 'path'
 import cors from 'cors'
 import dotenv from 'dotenv'
 
@@ -18,6 +18,9 @@ import { track } from './libs/controllers/track.controllers'
 import { errorMiddleware,/*  notFoundMiddleware */ } from './libs/middleware/errorMiddleware'
 
 import passport_config from './libs/middleware/passport'
+import headersAttachMiddleware from './libs/middleware/headersAttachMiddleware'
+
+import { fetchCoinPrices } from './fetchRoutine/getCoins'
 
 const sv = express()
 
@@ -26,22 +29,17 @@ const PORT = process.env.PORT !== undefined && !isNaN(parseInt(process.env.PORT)
 
 
 // -------------------- MIDDLEWARE --------------------
-sv.use(function (req, res, next) {
-  res.header('Access-Control-Allow-Credentials', "true");
-  res.header('Access-Control-Allow-Origin', req.headers.origin);
-  res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
-  res.header('Access-Control-Allow-Headers', 'X-Requested-With, X-HTTP-Method-Override, Content-Type, Accept');
-  next();
-});
+sv.use(headersAttachMiddleware);
 
 
 sv.use(express.json())
 sv.use(express.urlencoded({ extended: true }))
 sv.use(cors({
-  origin: 'https://pai-ly.vercel.app', //['http://192.168.56.1:3000', 'http://localhost:3000', 'http://localhost:8080'],
+  origin: process.env.NODE_ENV === 'production' ? 'https://pai-ly.vercel.app' : ['http://192.168.56.1:3000', 'http://localhost:3000', 'http://localhost:8080'],
   credentials: true,
 }))
-sv.use(cookieParser(process.env.SECRET))
+sv.use(cookieParser(
+  process.env.SECRET))
 
 
 sv.use(session({
@@ -52,6 +50,7 @@ sv.use(session({
   resave: false,
   saveUninitialized: false,
   cookie: {
+    sameSite: 'lax',
     maxAge: 1000 * 60 * 60 * 24, // 1 day
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
@@ -105,3 +104,6 @@ if (process.env.NODE_ENV === 'production') {
 
 sv.use(errorMiddleware)
 //sv.use(notFoundMiddleware)
+
+fetchCoinPrices()
+  .then(() => setInterval(fetchCoinPrices, 5000))

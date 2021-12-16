@@ -5,12 +5,14 @@ export interface IBalance {
   balance: number
 }
 
-
-export interface ICripto {
+export interface ICriptoReduced {
   name: string,
   token: string,
+  buy: number
+}
+
+export interface ICripto extends ICriptoReduced {
   image: string,
-  buy: number,
   sell: number,
   timestamp: number
 }

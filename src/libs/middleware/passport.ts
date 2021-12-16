@@ -3,7 +3,7 @@ import { Strategy as LocalStrategy } from 'passport-local'
 
 import { UsersDB } from '../models/Mongoose'
 import REGEX from '../../utils/regex'
-import { hashPassword, compareVsEncrypted } from '../../utils/crypto'
+import { hashPassword, compareVsEncrypted } from '../../utils/encryption'
 import { v4 } from 'uuid'
 
 export const passport_init = (pssp: PassportStatic) => {
