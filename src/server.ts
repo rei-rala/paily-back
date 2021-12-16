@@ -9,16 +9,12 @@ import cookieParser from 'cookie-parser'
 import MongoStore from 'connect-mongo'
 import passport from 'passport'
 
+import middleWares from './libs/middleware'
+
 import { mongooseSessionsURI, connectDBResources } from './libs/models/Mongoose'
 
 import { logUserOut, updateUserImage } from './libs/controllers/users.controllers'
-
-import { authMiddleware, postAuthentication } from './libs/middleware/authMiddleware'
 import { track } from './libs/controllers/track.controllers'
-import { errorMiddleware, notFoundMiddleware,/*  notFoundMiddleware */ } from './libs/middleware/errorMiddleware'
-
-import passport_config from './libs/middleware/passport'
-//import headersAttachMiddleware from './libs/middleware/headersAttachMiddleware'
 
 import { fetchCoinPrices } from './fetchRoutine/getCoins'
 import { criptoPrices } from './libs/controllers/criptos.controller'
@@ -30,7 +26,10 @@ const PORT = process.env.PORT !== undefined && !isNaN(parseInt(process.env.PORT)
 
 
 // -------------------- MIDDLEWARE --------------------
-//sv.use(headersAttachMiddleware);
+const { authMiddleware, postAuthentication, errorMiddleware, notFoundMiddleware, passport_config, headersAttachMiddleware } = middleWares
+
+
+sv.use(headersAttachMiddleware);
 
 sv.use(express.json())
 sv.use(express.urlencoded({ extended: true }))
