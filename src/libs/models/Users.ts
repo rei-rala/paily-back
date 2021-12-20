@@ -1,5 +1,6 @@
 import { Schema, model } from 'mongoose'
 import { IBalance } from './Cryptos'
+import { MongoDatabase } from './Mongoose'
 
 export interface IUser {
   _id?: any,
@@ -28,6 +29,5 @@ const UsersSchema = new Schema({
   versionKey: false
 })
 
-export const UserDB = model(usersCollection, UsersSchema)
-
-
+const UserDBModel = model(usersCollection, UsersSchema)
+export const UsersDB = new MongoDatabase(UserDBModel)

@@ -1,5 +1,6 @@
 import { Schema, model, } from 'mongoose'
 import { ICriptoReduced } from './Cryptos'
+import { MongoDatabase } from './Mongoose'
 const { Mixed } = Schema.Types
 
 export interface ICriptoPrice {
@@ -17,4 +18,5 @@ const CriptosPriceSchema = new Schema({
 })
 
 
-export const CriptoPriceDB = model(criptoPriceCollection, CriptosPriceSchema)
+const CriptoPriceDBModel = model(criptoPriceCollection, CriptosPriceSchema)
+export const CriptoPricesDB = new MongoDatabase(CriptoPriceDBModel)

@@ -3,7 +3,7 @@ import { errorMiddleware, notFoundMiddleware } from "./errorMiddleware";
 import passport_config from './passport'
 import headersAttachMiddleware from './headersAttachMiddleware'
 
-const middleWares = {
+export {
   authMiddleware,
   postAuthentication,
   errorMiddleware,
@@ -11,5 +11,3 @@ const middleWares = {
   passport_config,
   headersAttachMiddleware
 }
-
-export default middleWares

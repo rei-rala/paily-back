@@ -1,4 +1,5 @@
 import { Schema, model } from 'mongoose'
+import { MongoDatabase } from './Mongoose'
 
 export interface IBalance {
   token: string,
@@ -31,6 +32,5 @@ const CriptosSchema = new Schema({
   versionKey: false
 })
 
-export const CriptoDB = model(criptosCollection, CriptosSchema)
-
-
+const CriptoModelDB = model(criptosCollection, CriptosSchema)
+export const CriptosDB = new MongoDatabase(CriptoModelDB)

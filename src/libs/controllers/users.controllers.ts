@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from "express"
 
-import { UsersDB } from "../models/Mongoose"
+import { UsersDB } from "../models"
 import { IUser } from "../models/Users"
 //import REGEX from "../../utils/regex"
 

@@ -1,16 +1,12 @@
 import mongoose, { Model } from 'mongoose'
-import { CriptoDB } from './Cryptos'
-import { UserDB } from './Users'
 import { IUser } from './Users'
 import { ICripto } from './Cryptos'
-
-import dotend from 'dotenv'
-import { CriptoPriceDB, ICriptoPrice } from './CryptoPrice'
-dotend.config()
+import { ICriptoPrice } from './CryptoPrice'
+import { MONGO_USER, MONGO_PW } from '../../configs/index'
 
 type ModelType = Model<any, {}, {}, {}>
 
-class MongoDatabase {
+export class MongoDatabase {
   model: ModelType
 
   constructor(model: ModelType) {
@@ -29,8 +25,8 @@ class MongoDatabase {
     return this.model.find(filter, fields).limit(limit ?? 10).lean().exec()
   }
 
-  findLatest = async (fields?: string) => {
-    return this.model.find({}, fields ?? {}).sort({ "_id": -1 }).limit(1).lean().exec()
+  findLatest = async (fields?: string, limit?: number) => {
+    return this.model.find({}, fields ?? {}).sort({ "timestamp": -1 }).limit(limit ?? 1).lean().exec()
   }
 
   save = async (object: IUser | ICripto | ICriptoPrice) => {
@@ -56,12 +52,8 @@ class MongoDatabase {
   }
 }
 
-const mongooseURI = (db: string) => `mongodb+srv://${process.env.MONGO_USER}:${process.env.MONGO_PW}@pailycluster.ghnhh.mongodb.net/${db}?retryWrites=true&w=majority`
+const mongooseURI = (db: string) => `mongodb+srv://${MONGO_USER}:${MONGO_PW}@pailycluster.ghnhh.mongodb.net/${db}?retryWrites=true&w=majority`
 
 export const connectDBResources = async () => mongoose.connect(mongooseURI("paily"))
 export const closeConnectionToDb = async () => mongoose.connection.close()
 export const mongooseSessionsURI = mongooseURI("pailySessions")
-
-export const CriptosDB = new MongoDatabase(CriptoDB)
-export const UsersDB = new MongoDatabase(UserDB)
-export const CriptoPricesDB = new MongoDatabase(CriptoPriceDB)

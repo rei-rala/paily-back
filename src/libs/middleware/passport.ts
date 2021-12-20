@@ -1,9 +1,9 @@
 import { PassportStatic } from 'passport'
 import { Strategy as LocalStrategy } from 'passport-local'
 
-import { UsersDB } from '../models/Mongoose'
-import REGEX from '../../utils/regex'
-import { hashString, compareVsEncrypted } from '../../utils/encryption'
+import { UsersDB } from '../models'
+import REGEX from '../utils/regex'
+import { hashString, compareVsEncrypted } from '../utils/encryption'
 import { v4 } from 'uuid'
 
 export const passport_init = (pssp: PassportStatic) => {
@@ -15,7 +15,7 @@ export const passport_init = (pssp: PassportStatic) => {
     async (req, username, password, done) => {
 
       try {
-        await UsersDB.findOne({ email: username })
+        await UsersDB.findOne({ email: username.toLowerCase() })
           .then(async user => {
             if (user) {
               return done(null, false, { message: `Ya existe usuario con email ${username}` })
@@ -56,7 +56,7 @@ export const passport_init = (pssp: PassportStatic) => {
     async (req, username, password, done) => {
       try {
         await UsersDB
-          .findOne({ email: username })
+          .findOne({ email: username.toLowerCase() })
           .then(async foundUser => {
             if (!foundUser) {
               return done(null, false, { message: `${username} no existe!` })

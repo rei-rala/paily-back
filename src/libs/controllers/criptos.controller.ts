@@ -1,8 +1,8 @@
 import { Request, Response, NextFunction } from "express"
-import { CriptosDB, CriptoPricesDB } from "../models/Mongoose"
+import { CriptosDB, CriptoPricesDB } from "../models"
 
 
-export const getCriptoDB = (req: Request, res: Response, next: NextFunction) => {
+export const getCriptoDB = (_: Request, res: Response, next: NextFunction) => {
 
   CriptosDB.find()
     .then((x: any) => { res.status(200).json(x) })
@@ -47,13 +47,13 @@ export const criptoPrices = async (req: Request, res: Response, next: NextFuncti
       if (token && token !== '') {
 
         const found = latest.details.find((x: any) => x.token === token)
-        console.log(found)
+        // console.log(found)
         found
           ? res.status(200).send(found)
           : next({ status: 404, message: 'No encontramos el token', token })
 
       } else {
-        console.log(latest)
+        // console.log(latest)
         res.status(200).send(latest)
       }
     })

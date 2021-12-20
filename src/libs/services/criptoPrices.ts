@@ -1,9 +1,8 @@
 import axios from "axios"
-import { CriptoPricesDB } from "../libs/models/Mongoose"
 import moment from 'moment'
 
-import dotenv from 'dotenv'
-dotenv.config()
+import { CriptoPricesDB } from "../models"
+import { RAPIDAPI_KEY } from "../../configs"
 
 const OURCRIPTOS = ["bitcoin", "ethereum", "binancecoin", "solana", "cardano", "polkadot", "matic-network"]
 
@@ -68,12 +67,12 @@ const ourCriptoData = [
 
 const coingeckoBaseUrl = "https://coingecko.p.rapidapi.com"
 
-export const fetchCoinPrices = async () => {
+export const fetchCoinPricesToDB = async () => {
   axios.get(
     `${coingeckoBaseUrl}/simple/price?vs_currencies=usd&ids=${OURCRIPTOS.join()}&include_24hr_change=true&include_last_updated_at=true`, {
     headers: {
       'x-rapidapi-host': 'coingecko.p.rapidapi.com',
-      'x-rapidapi-key': process.env.RAPIDAPI_KEY || ''
+      'x-rapidapi-key': RAPIDAPI_KEY
     }
   })
     .then(async ({ data }) => {
@@ -93,4 +92,35 @@ export const fetchCoinPrices = async () => {
     })
     .then(resp => console.log('Nueva lista de precio'))
     .catch(err => console.log('Error al salvar lista de precios', err))
+}
+
+export const populateCriptoPrices: (intervalTimeMS?: number) => Promise<any> = async (intervalTimeMS) => {
+
+  return fetchCoinPricesToDB()
+    .catch(error => {
+      console.error(error.message)
+      process.exit(1)
+    })
+    .then(() => setTimeout(populateCriptoPrices, intervalTimeMS))
+}
+
+export const getCriptoPrices = async () => {
+  const prices = await CriptoPricesDB.findLatest()
+  return prices ?? []
+}
+
+export const getCriptoPricesRecursive: (intervalTimeMS?: number, callback?: any, ...params: any) => Promise<any> = async (intervalTimeMS, callback, params) => {
+
+  return await getCriptoPrices()
+    .then(prices => {
+      callback(...params, prices)
+      return prices
+    })
+    .catch(error => {
+      console.error(error.message)
+      process.exit(1)
+    })
+    .then(() => setTimeout(() => {
+      getCriptoPricesRecursive(intervalTimeMS, callback, params)
+    }, intervalTimeMS))
 }
