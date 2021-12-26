@@ -15,7 +15,7 @@ import { PORT, NODE_ENV, SECRET } from './configs'
 import { mongooseSessionsURI, connectDBResources } from './libs/models/Mongoose'
 
 import { /* authMiddleware ,*/ postAuthentication, errorMiddleware, notFoundMiddleware, passport_config, headersAttachMiddleware } from './libs/middleware'
-import { logUserOut, updateUserImage } from './libs/controllers/users.controllers'
+import { logUserOut, getOtherUser, updateUserImage } from './libs/controllers/users.controllers'
 import { criptoPrices } from './libs/controllers/criptos.controller'
 //import { track } from './libs/controllers/track.controllers'
 
@@ -78,12 +78,13 @@ connectDBResources()
 app.get('/', /* (_, res) => res.redirect('https://pai-ly.vercel.app') */)
 app.post('/api/user/register', passport.authenticate('-register'), postAuthentication)
 app.post('/api/user/login', passport.authenticate('-login'), postAuthentication)
-//app.use(authMiddleware)
 app.post('/api/user/logout', logUserOut)
 //app.use(track)
 
+//app.use(authMiddleware)
 app.get('/api/user', postAuthentication)
 app.post('/api/user', updateUserImage)
+app.get('/api/user/:id', getOtherUser)
 app.get('/api/cripto/latestprices', criptoPrices)
 
 /*

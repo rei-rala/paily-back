@@ -56,8 +56,6 @@ export const updateUserImage = async (req: Request, res: Response, next: NextFun
   const _id = req.user?._id.toString()
   const newImage = req.body.newImage
 
-  console.log(req.body)
-  console.log('assadsa')
   _id === undefined || newImage === undefined
     ? next({ status: 400, message: 'No se recibieron suficientes parametros' })
     /*
@@ -70,4 +68,20 @@ export const updateUserImage = async (req: Request, res: Response, next: NextFun
           : next({ status: 409, message: `Error no identificado en actualizacion de datos` })
       })
       .catch(message => next({ message }))
+}
+
+export const getOtherUser = async (req: Request, res: Response, next: NextFunction) => {
+  const { id } = req.params
+  id === undefined
+    ? res.status(400).send('No se recibieron suficientes parametros')
+    : UsersDB.findOne({ id })
+      .then(userFound => {
+        if (userFound) {
+          const { _id, email, password, balances, ...user } = userFound
+          res.status(200).send(user)
+        } else {
+          next({ status: 404, message: 'Usuario no encontrado' })
+        }
+      })
+      .catch(message => { next({ message }) })
 }
